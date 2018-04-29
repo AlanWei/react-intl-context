@@ -16,7 +16,7 @@ const defaultProps = {
 };
 
 class IntlProvider extends Component {
-  getMessage = (config) => {
+  formatMessage = (config) => {
     const { id } = config;
     const message = get(this.props, `messages.${id}`);
 
@@ -30,7 +30,7 @@ class IntlProvider extends Component {
   formatValue = () => ({
     locale: this.props.locale,
     messages: this.props.messages,
-    getMessage: this.getMessage,
+    formatMessage: this.formatMessage,
   })
 
   render() {
