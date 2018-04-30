@@ -73,7 +73,7 @@ class View extends Component {
   }
 }
 
-Home.propTypes = propTypes;
+View.propTypes = propTypes;
 export default injectIntl(View);
 ```
 ## To-Do
