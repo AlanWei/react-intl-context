@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
 import { Provider } from './IntlContext';
 
 const propTypes = {
@@ -24,9 +22,9 @@ class IntlProvider extends Component {
 
   formatMessage = (config) => {
     const { id } = config;
-    const message = get(this.props, `messages.${id}`);
+    const message = this.props.messages[id];
 
-    if (isNil(message)) {
+    if (message === undefined) {
       console.warn(`[react-intl-context]: Message key ${id} is undefined. Fallback to empty string.`);
       return '';
     }
