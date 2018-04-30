@@ -1,6 +1,4 @@
 # react-intl-context
-React Intl binding with React Context.
-
 Tiny React Component binds translations with React Context.
 ## Installation
 ```bash
