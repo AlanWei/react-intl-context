@@ -16,28 +16,27 @@ const defaultProps = {
 };
 
 class IntlProvider extends Component {
-  formatMessage = (config) => {
-    const { id } = config;
-    const message = get(this.props, `messages.${id}`);
-
-    if (isNil(message)) {
-      console.warn(`[react-intl-context]: Message key ${id} is undefined. Fallback to empty string`);
-      return '';
-    }
-    return message;
-  }
-
-  formatValue = () => ({
+  getDerivedValue = () => ({
     locale: this.props.locale,
     messages: this.props.messages,
     formatMessage: this.formatMessage,
   })
 
+  formatMessage = (config) => {
+    const { id } = config;
+    const message = get(this.props, `messages.${id}`);
+
+    if (isNil(message)) {
+      console.warn(`[react-intl-context]: Message key ${id} is undefined. Fallback to empty string.`);
+      return '';
+    }
+
+    return message;
+  }
+
   render() {
     return (
-      <Provider
-        value={this.formatValue()}
-      >
+      <Provider value={this.getDerivedValue()}>
         {this.props.children}
       </Provider>
     );
