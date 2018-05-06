@@ -1,4 +1,7 @@
 # react-intl-context
+[![npm v](https://img.shields.io/npm/v/react-intl-context.svg)](https://www.npmjs.com/package/react-intl-context)
+[![npm dm](https://img.shields.io/npm/dm/react-intl-context.svg)](https://www.npmjs.com/package/react-intl-context)
+
 Tiny React Component binds translations with React Context.
 ## Installation
 ```bash
