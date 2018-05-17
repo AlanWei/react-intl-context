@@ -3,12 +3,15 @@
 [![npm dm](https://img.shields.io/npm/dm/react-intl-context.svg)](https://www.npmjs.com/package/react-intl-context)
 
 Tiny React Component binds translations with React Context.
+
 ## Installation
 ```bash
 yarn add react-intl-context
 ```
+
 ## Usage
-### Add `IntlProvider` at top of the App
+### Single Intl
+#### Add `IntlProvider` at top of the App
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -39,7 +42,7 @@ const Router = props => (
       locale={LOCALE}
       messages={MESSAGES}
     >
-      <App>
+      <App />
     </IntlProvider>
   </ConnectedRouter>
 );
@@ -47,7 +50,7 @@ const Router = props => (
 Router.propTypes = propTypes;
 export default Router;
 ```
-### Inject `IntlConsumer` to components which need translations by `injectIntl` HOC
+#### Inject `IntlConsumer` to components which need translations by `injectIntl` HOC
 ```javascript
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -77,6 +80,87 @@ class View extends Component {
 View.propTypes = propTypes;
 export default injectIntl(View);
 ```
+
+### Multi Intl
+#### Add `MultiIntlProvider` at top of the App
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { ConnectedRouter } from 'react-router-redux';
+import { MultiIntlProvider } from 'react-intl-context';
+import App from './app';
+
+const propTypes = {
+  history: PropTypes.object.isRequired,
+};
+
+class Router extends Component {
+  state = {
+    currentLocale: 'en-us',
+  }
+
+  handleChange = () => {
+    this.setState({
+      currentLocale: this.state.currentLocale === 'en-us' ? 'zh-cn' : 'en-us',
+    });
+  }
+
+  render() {
+    return (
+      <ConnectedRouter history={props.history}>
+        <MultiIntlProvider
+          currentLocale={this.state.currentLocale}
+          messageMap={{
+            "en-us": {
+              "test": "test",
+            },
+            "zh-cn": {
+              "test": "测试",
+            }
+          }}
+        >
+          <App />
+          <button onClick={this.handleChange}>Change Intl</button>
+        </MultiIntlProvider>
+      </ConnectedRouter>
+    );
+  }
+}
+
+Router.propTypes = propTypes;
+export default Router;
+```
+#### Inject `IntlConsumer` to components which need translations by `injectIntl` HOC
+```javascript
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl-context';
+
+const propTypes = {
+  intl: PropTypes.object.isRequired,
+};
+
+/**
+ * this.props.intl = {
+ *   locale: PropTypes.string.
+ *   messages: PropTypes.objectOf(PropTypes.string),
+ *   formatMessage: ({
+ *     id: PropTypes.string,     // message key
+ *   }) => PropTypes.string      // message value
+ * }
+ */
+class View extends Component {
+  render() {
+    return (
+      <p>{this.props.intl.formatMessage({ id: 'test' })}</p>
+    );
+  }
+}
+
+View.propTypes = propTypes;
+export default injectIntl(View);
+```
+
 ## To-Do
 * Support custom variable in `formatMessage`
 #### Message
