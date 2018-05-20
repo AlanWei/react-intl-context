@@ -2,16 +2,18 @@
 [![npm v](https://img.shields.io/npm/v/react-intl-context.svg)](https://www.npmjs.com/package/react-intl-context)
 [![npm dm](https://img.shields.io/npm/dm/react-intl-context.svg)](https://www.npmjs.com/package/react-intl-context)
 
-Tiny React Component binds translations with React Context.
+Tiny React Component binds language files with React Context.
 
 ## Installation
 ```bash
-yarn add react-intl-context
+yarn add react-intl-context react
 ```
 
 ## Usage
 ### Single Intl
-#### Add `IntlProvider` at top of the App
+#### Add `IntlProvider` at the top of your app
+> Recommend to include your language file during the building process
+
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -21,7 +23,7 @@ import App from './app';
 
 /**
  * locale value in String
- * e.g. en-us
+ * e.g. "en-us"
  */
 const LOCALE = process.env.BUILD_LOCALE;
 /**
@@ -50,7 +52,8 @@ const Router = props => (
 Router.propTypes = propTypes;
 export default Router;
 ```
-#### Inject `IntlConsumer` to components which need translations by `injectIntl` HOC
+
+#### Inject `IntlConsumer` to component that need translations with `injectIntl` HOC
 ```javascript
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -82,7 +85,9 @@ export default injectIntl(View);
 ```
 
 ### Multi Intl
-#### Add `MultiIntlProvider` at top of the App
+#### Add `MultiIntlProvider` at the top of your app
+> Recommend to include your language file during the building process
+
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -90,13 +95,31 @@ import { ConnectedRouter } from 'react-router-redux';
 import { MultiIntlProvider } from 'react-intl-context';
 import App from './app';
 
+/**
+ * default locale value in String
+ * e.g. "en-us"
+ */
+const DEFAULT_LOCALE = process.env.BUILD_DEFAULT_LOCALE;
+/**
+ * locale message map in JSON or Object
+ * e.g. {
+ *   "en-us": {
+ *     "test": "test",
+ *   },
+ *   "zh-cn": {
+ *     "test": "测试",
+ *   }
+ * }
+ */
+const MESSAGE_MAP = process.env.BUILD_LOCALE_MESSAGE_MAP;
+
 const propTypes = {
   history: PropTypes.object.isRequired,
 };
 
 class Router extends Component {
   state = {
-    currentLocale: 'en-us',
+    currentLocale: DEFAULT_LOCALE,
   }
 
   handleChange = () => {
@@ -110,14 +133,7 @@ class Router extends Component {
       <ConnectedRouter history={props.history}>
         <MultiIntlProvider
           currentLocale={this.state.currentLocale}
-          messageMap={{
-            "en-us": {
-              "test": "test",
-            },
-            "zh-cn": {
-              "test": "测试",
-            }
-          }}
+          messageMap={MESSAGE_MAP}
         >
           <App />
           <button onClick={this.handleChange}>Change Intl</button>
@@ -130,7 +146,8 @@ class Router extends Component {
 Router.propTypes = propTypes;
 export default Router;
 ```
-#### Inject `IntlConsumer` to components which need translations by `injectIntl` HOC
+
+#### Inject `IntlConsumer` to component that need translations with `injectIntl` HOC
 ```javascript
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
