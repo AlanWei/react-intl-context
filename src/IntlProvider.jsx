@@ -14,11 +14,11 @@ const defaultProps = {
 };
 
 class IntlProvider extends Component {
-  getDerivedValue = () => ({
+  state = {
     locale: this.props.locale,
     messages: this.props.messages,
     formatMessage: this.formatMessage,
-  })
+  }
 
   formatMessage = (config) => {
     const { id } = config;
@@ -34,7 +34,7 @@ class IntlProvider extends Component {
 
   render() {
     return (
-      <Provider value={this.getDerivedValue()}>
+      <Provider value={this.state}>
         {this.props.children}
       </Provider>
     );
