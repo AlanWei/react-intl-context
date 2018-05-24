@@ -1,31 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import renderer from 'react-test-renderer';
-import { injectIntl, IntlProvider } from '../src';
+import { IntlValidId, IntlInvalidId } from './components';
+import { injectIntl, IntlProvider, MultiIntlProvider } from '../src';
 
-const propTypes = {
-  intl: PropTypes.shape({
-    locale: PropTypes.string,
-    messages: PropTypes.object,
-    formatMessage: PropTypes.func,
-  }).isRequired,
-};
-const ValidIdComponent = props => (
-  <div>
-    {props.intl.locale}
-    {props.intl.formatMessage({ id: 'test' })}
-  </div>
-);
-const InvalidIdComponent = props => (
-  <div>
-    {props.intl.locale}
-    {props.intl.formatMessage({ id: 'abc' })}
-  </div>
-);
-ValidIdComponent.propTypes = propTypes;
-InvalidIdComponent.propTypes = propTypes;
-
-test('[react-intl-context]: valid locale and messages 1', () => {
+test('[react-intl-context]: single intl valid locale and messages en-us', () => {
   const component = renderer.create((
     <IntlProvider
       locale="en-us"
@@ -33,14 +11,14 @@ test('[react-intl-context]: valid locale and messages 1', () => {
         test: 'test',
       }}
     >
-      {injectIntl(ValidIdComponent)()}
+      {injectIntl(IntlValidId)()}
     </IntlProvider>
   ));
   const tree = component.toJSON();
   expect(tree.children).toEqual(['en-us', 'test']);
 });
 
-test('[react-intl-context]: valid locale and messages 2', () => {
+test('[react-intl-context]: single intl valid locale and messages zh-cn', () => {
   const component = renderer.create((
     <IntlProvider
       locale="zh-cn"
@@ -48,14 +26,14 @@ test('[react-intl-context]: valid locale and messages 2', () => {
         test: '测试',
       }}
     >
-      {injectIntl(ValidIdComponent)()}
+      {injectIntl(IntlValidId)()}
     </IntlProvider>
   ));
   const tree = component.toJSON();
   expect(tree.children).toEqual(['zh-cn', '测试']);
 });
 
-test('[react-intl-context]: invalid message id', () => {
+test('[react-intl-context]: single intl invalid message id', () => {
   const component = renderer.create((
     <IntlProvider
       locale="en-us"
@@ -63,8 +41,68 @@ test('[react-intl-context]: invalid message id', () => {
         test: 'test',
       }}
     >
-      {injectIntl(InvalidIdComponent)()}
+      {injectIntl(IntlInvalidId)()}
     </IntlProvider>
+  ));
+  const tree = component.toJSON();
+  expect(tree.children).toEqual(['en-us', '']);
+});
+
+test('[react-intl-context]: multi intl valid locale and messages en-us', () => {
+  const component = renderer.create((
+    <MultiIntlProvider
+      currentLocale="en-us"
+      messageMap={{
+        'en-us': {
+          test: 'test',
+        },
+        'zh-cn': {
+          test: '测试',
+        },
+      }}
+    >
+      {injectIntl(IntlValidId)()}
+    </MultiIntlProvider>
+  ));
+  const tree = component.toJSON();
+  expect(tree.children).toEqual(['en-us', 'test']);
+});
+
+test('[react-intl-context]: multi intl valid locale and messages zh-cn', () => {
+  const component = renderer.create((
+    <MultiIntlProvider
+      currentLocale="zh-cn"
+      messageMap={{
+        'en-us': {
+          test: 'test',
+        },
+        'zh-cn': {
+          test: '测试',
+        },
+      }}
+    >
+      {injectIntl(IntlValidId)()}
+    </MultiIntlProvider>
+  ));
+  const tree = component.toJSON();
+  expect(tree.children).toEqual(['zh-cn', '测试']);
+});
+
+test('[react-intl-context]: multi intl invalid message id', () => {
+  const component = renderer.create((
+    <MultiIntlProvider
+      currentLocale="en-us"
+      messageMap={{
+        'en-us': {
+          test: 'test',
+        },
+        'zh-cn': {
+          test: '测试',
+        },
+      }}
+    >
+      {injectIntl(IntlInvalidId)()}
+    </MultiIntlProvider>
   ));
   const tree = component.toJSON();
   expect(tree.children).toEqual(['en-us', '']);

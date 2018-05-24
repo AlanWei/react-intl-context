@@ -41,11 +41,12 @@ class MultiIntlProvider extends Component {
   })
 
   formatMessage = (config) => {
+    const { messages, currentLocale } = this.state;
     const { id } = config;
-    const message = this.state.messages[id];
+    const message = messages[id];
 
     if (message === undefined) {
-      console.warn(`[react-intl-context]: Locale ${this.state.currentLocale} message key ${id} is undefined. Fallback to empty string.`);
+      console.warn(`[react-intl-context]: Locale ${currentLocale} message key ${id} is undefined. Fallback to empty string.`);
       return '';
     }
 
