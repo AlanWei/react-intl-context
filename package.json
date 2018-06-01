@@ -1,6 +1,6 @@
 {
   "name": "react-intl-context",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Tiny React Component binds language files with React Context.",
   "main": "lib/index.js",
   "repository": "git@github.com:AlanWei/react-intl-context.git",
