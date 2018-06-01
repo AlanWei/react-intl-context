@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Provider } from './IntlContext';
 
 const propTypes = {
+  defaultLocale: PropTypes.string.isRequired,
   messageMap: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)),
-  currentLocale: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired,
 };
 
@@ -13,35 +13,31 @@ const defaultProps = {
 };
 
 class MultiIntlProvider extends Component {
-  static getDerivedStateFromProps(nextProps) {
-    return {
-      currentLocale: nextProps.currentLocale,
-      messages: nextProps.messageMap[nextProps.currentLocale],
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: {
+        locale: props.defaultLocale,
+        messages: props.messageMap[props.defaultLocale],
+        formatMessage: this.formatMessage,
+        updateLocale: this.updateLocale,
+      },
     };
   }
 
-  state = {
-    currentLocale: this.props.currentLocale,
-    messages: this.props.messageMap[this.props.currentLocale],
+  updateLocale = (locale) => {
+    this.setState({
+      value: {
+        ...this.state.value,
+        locale,
+        messages: this.props.messageMap[locale],
+      },
+    });
   }
-
-  componentDidUpdate = (prevProps) => {
-    if (this.props.currentLocale !== prevProps.currentLocale) {
-      this.setState({
-        currentLocale: this.props.currentLocale,
-        messages: this.props.messageMap[this.props.currentLocale],
-      });
-    }
-  }
-
-  getDerivedValue = () => ({
-    locale: this.state.currentLocale,
-    messages: this.state.messages,
-    formatMessage: this.formatMessage,
-  })
 
   formatMessage = (config) => {
-    const { messages, currentLocale } = this.state;
+    const { messages, currentLocale } = this.state.value;
     const { id } = config;
     const message = messages[id];
 
@@ -55,7 +51,7 @@ class MultiIntlProvider extends Component {
 
   render() {
     return (
-      <Provider value={this.getDerivedValue()}>
+      <Provider value={this.state.value}>
         {this.props.children}
       </Provider>
     );

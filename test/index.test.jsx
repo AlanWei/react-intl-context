@@ -1,10 +1,19 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { configure, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { IntlValidId, IntlInvalidId } from './components';
 import { injectIntl, IntlProvider, MultiIntlProvider } from '../src';
 
+beforeEach(() => {
+  jest.resetModules();
+});
+
+configure({
+  adapter: new Adapter(),
+});
+
 test('[react-intl-context]: single intl valid locale and messages en-us', () => {
-  const component = renderer.create((
+  const component = shallow((
     <IntlProvider
       locale="en-us"
       messages={{
@@ -14,12 +23,12 @@ test('[react-intl-context]: single intl valid locale and messages en-us', () => 
       {injectIntl(IntlValidId)()}
     </IntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['en-us', 'test']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span>test</span></div>');
 });
 
 test('[react-intl-context]: single intl valid locale and messages zh-cn', () => {
-  const component = renderer.create((
+  const component = shallow((
     <IntlProvider
       locale="zh-cn"
       messages={{
@@ -29,12 +38,12 @@ test('[react-intl-context]: single intl valid locale and messages zh-cn', () => 
       {injectIntl(IntlValidId)()}
     </IntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['zh-cn', '测试']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>zh-cn</span><span>测试</span></div>');
 });
 
 test('[react-intl-context]: single intl invalid message id', () => {
-  const component = renderer.create((
+  const component = shallow((
     <IntlProvider
       locale="en-us"
       messages={{
@@ -44,14 +53,14 @@ test('[react-intl-context]: single intl invalid message id', () => {
       {injectIntl(IntlInvalidId)()}
     </IntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['en-us', '']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span></span></div>');
 });
 
 test('[react-intl-context]: multi intl valid locale and messages en-us', () => {
-  const component = renderer.create((
+  const component = shallow((
     <MultiIntlProvider
-      currentLocale="en-us"
+      defaultLocale="en-us"
       messageMap={{
         'en-us': {
           test: 'test',
@@ -64,14 +73,14 @@ test('[react-intl-context]: multi intl valid locale and messages en-us', () => {
       {injectIntl(IntlValidId)()}
     </MultiIntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['en-us', 'test']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span>test</span></div>');
 });
 
 test('[react-intl-context]: multi intl valid locale and messages zh-cn', () => {
-  const component = renderer.create((
+  const component = shallow((
     <MultiIntlProvider
-      currentLocale="zh-cn"
+      defaultLocale="zh-cn"
       messageMap={{
         'en-us': {
           test: 'test',
@@ -84,14 +93,14 @@ test('[react-intl-context]: multi intl valid locale and messages zh-cn', () => {
       {injectIntl(IntlValidId)()}
     </MultiIntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['zh-cn', '测试']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>zh-cn</span><span>测试</span></div>');
 });
 
 test('[react-intl-context]: multi intl invalid message id', () => {
-  const component = renderer.create((
+  const component = shallow((
     <MultiIntlProvider
-      currentLocale="en-us"
+      defaultLocale="en-us"
       messageMap={{
         'en-us': {
           test: 'test',
@@ -104,6 +113,6 @@ test('[react-intl-context]: multi intl invalid message id', () => {
       {injectIntl(IntlInvalidId)()}
     </MultiIntlProvider>
   ));
-  const tree = component.toJSON();
-  expect(tree.children).toEqual(['en-us', '']);
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span></span></div>');
 });

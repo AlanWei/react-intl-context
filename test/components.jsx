@@ -6,21 +6,22 @@ const propTypes = {
     locale: PropTypes.string,
     messages: PropTypes.object,
     formatMessage: PropTypes.func,
+    updateIntl: PropTypes.func,
   }).isRequired,
 };
 
 const IntlValidId = props => (
   <div>
-    {props.intl.locale}
-    {props.intl.formatMessage({ id: 'test' })}
+    <span>{props.intl.locale}</span>
+    <span>{props.intl.formatMessage({ id: 'test' })}</span>
   </div>
 );
 IntlValidId.propTypes = propTypes;
 
 const IntlInvalidId = props => (
   <div>
-    {props.intl.locale}
-    {props.intl.formatMessage({ id: 'abc' })}
+    <span>{props.intl.locale}</span>
+    <span>{props.intl.formatMessage({ id: 'abc' })}</span>
   </div>
 );
 IntlInvalidId.propTypes = propTypes;
