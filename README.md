@@ -29,7 +29,8 @@ const LOCALE = process.env.BUILD_LOCALE;
 /**
  * locale messages in JSON or Object
  * e.g. {
- *   test: "test",
+ *   "test": "test",
+ *   "roleInfo": "I am a {role}.",
  * }
  */
 const MESSAGES = process.env.BUILD_LOCALE_MESSAGES;
@@ -68,14 +69,26 @@ const propTypes = {
  *   locale: PropTypes.string.
  *   messages: PropTypes.objectOf(PropTypes.string),
  *   formatMessage: ({
- *     id: PropTypes.string,     // message key
- *   }) => PropTypes.string      // message value
+ *     id: PropTypes.string,             // message key
+ *     defaultMessage: PropTypes.string, // message defaultValue if message key is missing in locale files
+ *   }, {
+ *     [variableKey]: [variableValue],   // custom variables
+ *     ...
+ *   }) => PropTypes.string              // message value
  * }
  */
 class View extends Component {
   render() {
+    const roleMap = {
+      'en-us': 'student',
+      'zh-cn': '学生',
+    };
+
+    const { formatMessage, locale } = this.props.intl;
+
     return (
-      <p>{this.props.intl.formatMessage({ id: 'test' })}</p>
+      <p>{formatMessage({ id: 'test' })}</p>
+      <p>{formatMessage({ id: 'roleInfo' }, { role: roleMap[locale] })}</p>
     );
   }
 }
@@ -105,9 +118,11 @@ const DEFAULT_LOCALE = process.env.BUILD_DEFAULT_LOCALE;
  * e.g. {
  *   "en-us": {
  *     "test": "test",
+ *     "roleInfo": "I am a {role}.",
  *   },
  *   "zh-cn": {
  *     "test": "测试",
+ *     "roleInfo": "我是一个{role}。",
  *   }
  * }
  */
@@ -117,31 +132,16 @@ const propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-class Router extends Component {
-  state = {
-    currentLocale: DEFAULT_LOCALE,
-  }
-
-  handleChange = () => {
-    this.setState({
-      currentLocale: this.state.currentLocale === 'en-us' ? 'zh-cn' : 'en-us',
-    });
-  }
-
-  render() {
-    return (
-      <ConnectedRouter history={props.history}>
-        <MultiIntlProvider
-          currentLocale={this.state.currentLocale}
-          messageMap={MESSAGE_MAP}
-        >
-          <App />
-          <button onClick={this.handleChange}>Change Intl</button>
-        </MultiIntlProvider>
-      </ConnectedRouter>
-    );
-  }
-}
+const Router = props => (
+  <ConnectedRouter history={props.history}>
+    <MultiIntlProvider
+      defaultLocale={DEFAULT_LOCALE}
+      messageMap={MESSAGE_MAP}
+    >
+      <App />
+    </MultiIntlProvider>
+  </ConnectedRouter>
+);
 
 Router.propTypes = propTypes;
 export default Router;
@@ -162,37 +162,30 @@ const propTypes = {
  *   locale: PropTypes.string.
  *   messages: PropTypes.objectOf(PropTypes.string),
  *   formatMessage: ({
- *     id: PropTypes.string,     // message key
- *   }) => PropTypes.string      // message value
+ *     id: PropTypes.string,             // message key
+ *     defaultMessage: PropTypes.string, // message defaultValue if message key is missing in locale files
+ *   }, {
+ *     [variableKey]: [variableValue],   // custom variables
+ *     ...
+ *   }) => PropTypes.string              // message value
  * }
  */
 class View extends Component {
   render() {
+    const roleMap = {
+      'en-us': 'student',
+      'zh-cn': '学生',
+    };
+
+    const { formatMessage, locale } = this.props.intl;
+
     return (
-      <p>{this.props.intl.formatMessage({ id: 'test' })}</p>
+      <p>{formatMessage({ id: 'test' })}</p>
+      <p>{formatMessage({ id: 'roleInfo' }, { role: roleMap[locale] })}</p>
     );
   }
 }
 
 View.propTypes = propTypes;
 export default injectIntl(View);
-```
-
-## To-Do
-* Support custom variable in `formatMessage`
-#### Message
-```javascript
-{
-  home_promo: "I love ${appName}.",
-}
-```
-#### Variable
-```javascript
-this.props.intl.formatMessage({
-  id: 'home_promo',
-  appName: 'React',
-});
-
-// return
-"I love React."
 ```
