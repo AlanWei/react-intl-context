@@ -26,7 +26,16 @@ const IntlInvalidId = props => (
 );
 IntlInvalidId.propTypes = propTypes;
 
+const IntlInvalidIdWithDefaultMessage = props => (
+  <div>
+    <span>{props.intl.locale}</span>
+    <span>{props.intl.formatMessage({ id: 'abc', defaultMessage: 'abc' })}</span>
+  </div>
+);
+IntlInvalidIdWithDefaultMessage.propTypes = propTypes;
+
 export {
   IntlValidId,
   IntlInvalidId,
+  IntlInvalidIdWithDefaultMessage,
 };

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from './IntlContext';
+import formatMessage from './utils/formatMessage';
 
 const propTypes = {
   locale: PropTypes.string,
@@ -17,25 +18,15 @@ class IntlProvider extends Component {
   constructor(props) {
     super(props);
 
+    const { locale, messages } = props;
+
     this.state = {
       value: {
-        locale: props.locale,
-        messages: props.messages,
-        formatMessage: this.formatMessage,
+        locale,
+        messages,
+        formatMessage: config => formatMessage(config, messages),
       },
     };
-  }
-
-  formatMessage = (config) => {
-    const { id } = config;
-    const message = this.state.value.messages[id];
-
-    if (message === undefined) {
-      console.warn(`[react-intl-context]: Message key ${id} is undefined. Fallback to empty string.`);
-      return '';
-    }
-
-    return message;
   }
 
   render() {

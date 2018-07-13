@@ -1,7 +1,7 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { IntlValidId, IntlInvalidId } from './components';
+import { IntlValidId, IntlInvalidId, IntlInvalidIdWithDefaultMessage } from './components';
 import { injectIntl, IntlProvider, MultiIntlProvider } from '../src';
 
 beforeEach(() => {
@@ -55,6 +55,21 @@ test('[react-intl-context]: single intl invalid message id', () => {
   ));
   const html = component.html();
   expect(html).toEqual('<div><span>en-us</span><span></span></div>');
+});
+
+test('[react-intl-context]: single intl invalid message id with defaultMessage', () => {
+  const component = shallow((
+    <IntlProvider
+      locale="en-us"
+      messages={{
+        test: 'test',
+      }}
+    >
+      {injectIntl(IntlInvalidIdWithDefaultMessage)()}
+    </IntlProvider>
+  ));
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span>abc</span></div>');
 });
 
 test('[react-intl-context]: multi intl valid locale and messages en-us', () => {
@@ -115,4 +130,24 @@ test('[react-intl-context]: multi intl invalid message id', () => {
   ));
   const html = component.html();
   expect(html).toEqual('<div><span>en-us</span><span></span></div>');
+});
+
+test('[react-intl-context]: multi intl invalid message id with defaultMessage', () => {
+  const component = shallow((
+    <MultiIntlProvider
+      defaultLocale="en-us"
+      messageMap={{
+        'en-us': {
+          test: 'test',
+        },
+        'zh-cn': {
+          test: '测试',
+        },
+      }}
+    >
+      {injectIntl(IntlInvalidIdWithDefaultMessage)()}
+    </MultiIntlProvider>
+  ));
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span>abc</span></div>');
 });

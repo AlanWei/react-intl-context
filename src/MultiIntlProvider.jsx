@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from './IntlContext';
+import formatMessage from './utils/formatMessage';
 
 const propTypes = {
   defaultLocale: PropTypes.string.isRequired,
@@ -16,11 +17,14 @@ class MultiIntlProvider extends Component {
   constructor(props) {
     super(props);
 
+    const { defaultLocale, messageMap } = props;
+    const messages = messageMap[defaultLocale];
+
     this.state = {
       value: {
-        locale: props.defaultLocale,
-        messages: props.messageMap[props.defaultLocale],
-        formatMessage: this.formatMessage,
+        locale: defaultLocale,
+        messages,
+        formatMessage: config => formatMessage(config, messages),
         updateLocale: this.updateLocale,
       },
     };
@@ -34,19 +38,6 @@ class MultiIntlProvider extends Component {
         messages: this.props.messageMap[locale],
       },
     });
-  }
-
-  formatMessage = (config) => {
-    const { messages, currentLocale } = this.state.value;
-    const { id } = config;
-    const message = messages[id];
-
-    if (message === undefined) {
-      console.warn(`[react-intl-context]: Locale ${currentLocale} message key ${id} is undefined. Fallback to empty string.`);
-      return '';
-    }
-
-    return message;
   }
 
   render() {
