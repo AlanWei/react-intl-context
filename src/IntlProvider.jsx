@@ -24,7 +24,7 @@ class IntlProvider extends Component {
       value: {
         locale,
         messages,
-        formatMessage: config => formatMessage(config, messages),
+        formatMessage: (config, variables) => formatMessage(config, messages, variables),
       },
     };
   }

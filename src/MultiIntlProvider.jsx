@@ -24,7 +24,7 @@ class MultiIntlProvider extends Component {
       value: {
         locale: defaultLocale,
         messages,
-        formatMessage: config => formatMessage(config, messages),
+        formatMessage: (config, variables) => formatMessage(config, messages, variables),
         updateLocale: this.updateLocale,
       },
     };

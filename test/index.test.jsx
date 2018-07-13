@@ -1,7 +1,7 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { IntlValidId, IntlInvalidId, IntlInvalidIdWithDefaultMessage } from './components';
+import { IntlValidId, IntlValidIdWithVariables, IntlInvalidId, IntlInvalidIdWithDefaultMessage } from './components';
 import { injectIntl, IntlProvider, MultiIntlProvider } from '../src';
 
 beforeEach(() => {
@@ -40,6 +40,21 @@ test('[react-intl-context]: single intl valid locale and messages zh-cn', () => 
   ));
   const html = component.html();
   expect(html).toEqual('<div><span>zh-cn</span><span>测试</span></div>');
+});
+
+test('[react-intl-context]: single intl valid message id with variables', () => {
+  const component = shallow((
+    <IntlProvider
+      locale="en-us"
+      messages={{
+        test: 'I am an {role}. You are also an {role}. But he is a {role2}.',
+      }}
+    >
+      {injectIntl(IntlValidIdWithVariables)()}
+    </IntlProvider>
+  ));
+  const html = component.html();
+  expect(html).toEqual('<div><span>en-us</span><span>I am an engineer. You are also an engineer. But he is a teacher.</span></div>');
 });
 
 test('[react-intl-context]: single intl invalid message id', () => {

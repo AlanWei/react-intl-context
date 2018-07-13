@@ -18,6 +18,18 @@ const IntlValidId = props => (
 );
 IntlValidId.propTypes = propTypes;
 
+const IntlValidIdWithVariables = props => (
+  <div>
+    <span>{props.intl.locale}</span>
+    <span>{props.intl.formatMessage(
+      { id: 'test' },
+      { role: 'engineer', role2: 'teacher' },
+    )}
+    </span>
+  </div>
+);
+IntlValidIdWithVariables.propTypes = propTypes;
+
 const IntlInvalidId = props => (
   <div>
     <span>{props.intl.locale}</span>
@@ -36,6 +48,7 @@ IntlInvalidIdWithDefaultMessage.propTypes = propTypes;
 
 export {
   IntlValidId,
+  IntlValidIdWithVariables,
   IntlInvalidId,
   IntlInvalidIdWithDefaultMessage,
 };
