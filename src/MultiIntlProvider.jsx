@@ -31,10 +31,13 @@ class MultiIntlProvider extends Component {
   }
 
   updateLocale = (locale) => {
-    const messages = this.props.messageMap[locale];
+    const { messageMap } = this.props;
+    const { value } = this.state;
+
+    const messages = messageMap[locale];
     this.setState({
       value: {
-        ...this.state.value,
+        ...value,
         locale,
         messages,
         formatMessage: (config, variables) => formatMessage(config, messages, variables),
@@ -43,9 +46,12 @@ class MultiIntlProvider extends Component {
   }
 
   render() {
+    const { children } = this.props;
+    const { value } = this.state;
+
     return (
-      <Provider value={this.state.value}>
-        {this.props.children}
+      <Provider value={value}>
+        {children}
       </Provider>
     );
   }

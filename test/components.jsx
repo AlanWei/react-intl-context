@@ -10,38 +10,39 @@ const propTypes = {
   }).isRequired,
 };
 
-const IntlValidId = props => (
+const IntlValidId = ({ intl }) => (
   <div>
-    <span>{props.intl.locale}</span>
-    <span>{props.intl.formatMessage({ id: 'test' })}</span>
+    <span>{intl.locale}</span>
+    <span>{intl.formatMessage({ id: 'test' })}</span>
   </div>
 );
 IntlValidId.propTypes = propTypes;
 
-const IntlValidIdWithVariables = props => (
+const IntlValidIdWithVariables = ({ intl }) => (
   <div>
-    <span>{props.intl.locale}</span>
-    <span>{props.intl.formatMessage(
-      { id: 'test' },
-      { role: 'engineer', role2: 'teacher' },
-    )}
+    <span>{intl.locale}</span>
+    <span>
+      {intl.formatMessage(
+        { id: 'test' },
+        { role: 'engineer', role2: 'teacher' },
+      )}
     </span>
   </div>
 );
 IntlValidIdWithVariables.propTypes = propTypes;
 
-const IntlInvalidId = props => (
+const IntlInvalidId = ({ intl }) => (
   <div>
-    <span>{props.intl.locale}</span>
-    <span>{props.intl.formatMessage({ id: 'abc' })}</span>
+    <span>{intl.locale}</span>
+    <span>{intl.formatMessage({ id: 'abc' })}</span>
   </div>
 );
 IntlInvalidId.propTypes = propTypes;
 
-const IntlInvalidIdWithDefaultMessage = props => (
+const IntlInvalidIdWithDefaultMessage = ({ intl }) => (
   <div>
-    <span>{props.intl.locale}</span>
-    <span>{props.intl.formatMessage({ id: 'abc', defaultMessage: 'abc' })}</span>
+    <span>{intl.locale}</span>
+    <span>{intl.formatMessage({ id: 'abc', defaultMessage: 'abc' })}</span>
   </div>
 );
 IntlInvalidIdWithDefaultMessage.propTypes = propTypes;

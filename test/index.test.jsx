@@ -1,7 +1,12 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { IntlValidId, IntlValidIdWithVariables, IntlInvalidId, IntlInvalidIdWithDefaultMessage } from './components';
+import {
+  IntlValidId,
+  IntlValidIdWithVariables,
+  IntlInvalidId,
+  IntlInvalidIdWithDefaultMessage,
+} from './components';
 import { injectIntl, IntlProvider, MultiIntlProvider } from '../src';
 
 beforeEach(() => {

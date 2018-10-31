@@ -30,9 +30,12 @@ class IntlProvider extends Component {
   }
 
   render() {
+    const { children } = this.props;
+    const { value } = this.state;
+
     return (
-      <Provider value={this.state.value}>
-        {this.props.children}
+      <Provider value={value}>
+        {children}
       </Provider>
     );
   }
